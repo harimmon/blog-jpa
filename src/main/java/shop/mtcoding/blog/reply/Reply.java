@@ -1,6 +1,7 @@
 package shop.mtcoding.blog.reply;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,4 +29,11 @@ public class Reply {
 
     @CreationTimestamp
     private Timestamp createdAt;
+
+    @Builder
+    public Reply(String content, User user, Board board) {
+        this.content = content; // 댓글 내용
+        this.user = user; // 유저 정보
+        this.board = board; // 게시글 정보
+    }
 }
