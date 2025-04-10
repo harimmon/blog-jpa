@@ -43,4 +43,10 @@ public class LoveRepository {
     public Love findById(Integer id) {
         return em.find(Love.class, id);
     }
+
+    public void deleteByBoardId(Integer boardId) {
+        Query query = em.createQuery("delete from Love lo where lo.board.id = :boardId");
+        query.setParameter("boardId", boardId);
+        query.executeUpdate();
+    }
 }

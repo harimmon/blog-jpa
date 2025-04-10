@@ -20,4 +20,16 @@ public class BoardRequest {
                     .build();
         }
     }
+
+    @Data
+    public static class UpdateDTO {
+        private String title;
+        private String content;
+
+        // 기존 board 엔티티에 반영
+        public void updateEntity(Board board) {
+            board.update(title, content); // Board 엔티티 내부에 update 메서드 필요
+        }
+    }
+
 }
