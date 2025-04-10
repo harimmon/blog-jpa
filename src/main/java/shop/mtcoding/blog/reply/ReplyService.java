@@ -3,25 +3,32 @@ package shop.mtcoding.blog.reply;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.mtcoding.blog.board.Board;
-import shop.mtcoding.blog.board.BoardRepository;
 import shop.mtcoding.blog.user.User;
-import shop.mtcoding.blog.user.UserRepository;
 
 @RequiredArgsConstructor
 @Service
 public class ReplyService {
     private final ReplyRepository replyRepository;
-    private final BoardRepository boardRepository; // 게시글 정보 필요
-    private final UserRepository userRepository;
 
     @Transactional
-    public void 댓글쓰기(ReplyRequest.SaveDTO requestDTO, User sessionUser) {
-        Board board = boardRepository.findById(requestDTO.getBoardId());
+    public void 댓글쓰기(ReplyRequest.SaveDTO reqDTO, User sessionUser) {
+        replyRepository.save(reqDTO.toEntity(sessionUser));
+    }
 
-        User userPS = userRepository.findById(sessionUser.getId());
+    @Transactional
+    public Integer 댓글삭제(Integer id, Integer sessionUserId) {
+        Reply replyPS = replyRepository.findById(id);
 
-        Reply reply = new Reply(requestDTO.getComment(), userPS, board);
-        replyRepository.save(reply);
+        if (replyPS == null) throw new RuntimeException("댓글이 없는데 어떻게 삭제해 ?");
+
+        if (!(replyPS.getUser().getId().equals(sessionUserId))) {
+            throw new RuntimeException("니 댓글 아닌데?");
+        }
+
+        int boardId = replyPS.getBoard().getId();
+
+        replyRepository.deleteById(id);
+
+        return boardId;
     }
 }

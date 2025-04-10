@@ -31,9 +31,10 @@ public class Reply {
     private Timestamp createdAt;
 
     @Builder
-    public Reply(String content, User user, Board board) {
+    public Reply(String content, User user, Board board, Timestamp createdAt) {
         this.content = content; // 댓글 내용
         this.user = user; // 유저 정보
         this.board = board; // 게시글 정보
+        this.createdAt = createdAt;
     }
 }
