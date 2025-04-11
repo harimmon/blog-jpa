@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import shop.mtcoding.blog._core.erorr.ex.Exception401;
 import shop.mtcoding.blog.user.User;
 
@@ -19,19 +20,18 @@ public class BoardController {
     @PostMapping("/board/{id}/update")
     public String update(@PathVariable("id") Integer id, BoardRequest.UpdateDTO reqDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
 
         boardService.글수정하기(reqDTO, id, sessionUser.getId());
 
         return "redirect:/board/" + id;
     }
 
-//    @GetMapping("/v2/board/{id}")
-//    public @ResponseBody BoardResponse.DetailDTO v2detail(@PathVariable("id") Integer id) {
-//        Integer sessionUserId = id;
-//        BoardResponse.DetailDTO detailDTO = boardService.글상세보기(id, sessionUserId);
-//        return detailDTO;
-//    }
+    @GetMapping("/v2/board/{id}")
+    public @ResponseBody BoardResponse.DetailDTO v2detail(@PathVariable("id") Integer id) {
+        Integer sessionUserId = id;
+        BoardResponse.DetailDTO detailDTO = boardService.글상세보기(id, sessionUserId);
+        return detailDTO;
+    }
 
     @GetMapping("/board/{id}")
     public String detail(@PathVariable("id") Integer id, HttpServletRequest request) {
@@ -58,7 +58,6 @@ public class BoardController {
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO saveDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
 
         boardService.글쓰기(saveDTO, sessionUser);
 
@@ -67,8 +66,6 @@ public class BoardController {
 
     @GetMapping("/board/save-form")
     public String saveForm() {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
         return "board/save-form";
     }
 
@@ -85,8 +82,6 @@ public class BoardController {
     @PostMapping("/board/{id}/update-form")
     public String update(@PathVariable("id") Integer id, HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
-
         Board board = boardService.업데이트글보기(id, sessionUser.getId());
         request.setAttribute("model", board);
         return "board/update-form";
