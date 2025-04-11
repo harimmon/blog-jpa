@@ -16,6 +16,16 @@ public class BoardController {
     private final BoardService boardService;
     private final HttpSession session;
 
+    @PostMapping("/board/{id}/update")
+    public String update(@PathVariable("id") Integer id, BoardRequest.UpdateDTO reqDTO) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
+
+        boardService.글수정하기(reqDTO, id, sessionUser.getId());
+
+        return "redirect:/board/" + id;
+    }
+
 //    @GetMapping("/v2/board/{id}")
 //    public @ResponseBody BoardResponse.DetailDTO v2detail(@PathVariable("id") Integer id) {
 //        Integer sessionUserId = id;
@@ -72,13 +82,14 @@ public class BoardController {
         return "board/update-form";
     }
 
-    @PostMapping("/board/{id}/update")
-    public String update(@PathVariable Integer id, BoardRequest.UpdateDTO updateDTO) {
+    @PostMapping("/board/{id}/update-form")
+    public String update(@PathVariable("id") Integer id, HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         if (sessionUser == null) throw new Exception401("인증이 필요합니다");
 
-        boardService.글수정하기(id, updateDTO);
-        return "redirect:/board/" + id;
+        Board board = boardService.업데이트글보기(id, sessionUser.getId());
+        request.setAttribute("model", board);
+        return "board/update-form";
     }
 
     @PostMapping("/board/{id}/delete")
