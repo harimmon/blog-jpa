@@ -17,6 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/love/**")
                 .addPathPatterns("/reply/**")
                 .addPathPatterns("/api/**")
+                .excludePathPatterns("/api/check-username-available/**")
                 .excludePathPatterns("/board/{id:\\d+}"); // 정규 표현식
     }
 }
