@@ -28,6 +28,21 @@ public class BoardRepository {
         return em.find(Board.class, id);
     }
 
+    // 1. 로그인 안 했을 때 -> 4개 (완료)
+    // 2. 로그인 했을 때 -> ssar -> 5개
+    // 3. 로그인 했을 때 -> ssar이 아니면 -> 4개
+    // 그룹함수 -> Long
+    public Long totalCount() {
+        Query query = em.createQuery("select count(b) from Board b where b.isPublic = true", Long.class);
+        return (Long) query.getSingleResult();
+    }
+
+    public Long totalCount(int userId) {
+        Query query = em.createQuery("select count(b) from Board b where b.isPublic = true or b.user.id = :userId", Long.class);
+        query.setParameter("userId", userId);
+        return (Long) query.getSingleResult();
+    }
+
     // localhost:8080?page=0
     public List<Board> findAll(int page) {
         String sql = "select b from Board b where b.isPublic = true order by b.id desc";

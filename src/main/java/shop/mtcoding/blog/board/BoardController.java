@@ -41,6 +41,8 @@ public class BoardController {
         return "board/detail";
     }
 
+    // localhost:8080?page=0
+    // localhost:8080
     @GetMapping("/")
     public String list(HttpServletRequest request, @RequestParam(required = false, value = "page", defaultValue = "0") Integer page) {
         User sessionUser = (User) session.getAttribute("sessionUser");

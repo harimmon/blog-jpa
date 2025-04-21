@@ -14,13 +14,29 @@ public class BoardResponse {
         private List<Board> boards;
         private Integer prev;
         private Integer next;
-        private boolean isFirst;
-        private boolean isLast;
+        private Integer current;
+        private Integer size;
+        private Integer totalCount;
+        private Integer totalPage;
+        private boolean isFirst; // current == 0
+        private boolean isLast; // totalCount, size = 3, totalPage == current
+        private List<Integer> numbers;
 
-        public DTO(List<Board> boards, Integer prev, Integer next) {
+        public DTO(List<Board> boards, Integer current, Integer totalCount) {
             this.boards = boards;
-            this.prev = prev;
-            this.next = next;
+            this.prev = current - 1;
+            this.next = current + 1;
+            this.size = 3;
+            this.totalCount = totalCount; // given
+            this.totalPage = makeTotalPage(totalCount, size);
+            this.isFirst = current == 0;
+            this.isLast = (totalPage - 1) == current;
+            System.out.println("isLast: " + isLast);
+        }
+
+        private Integer makeTotalPage(int totalCount, int size) {
+            int rest = totalCount % size > 0 ? 1 : 0; // 6 -> 0, 7 -> 1, 8 -> 2
+            return totalCount / size + rest;
         }
     }
 
