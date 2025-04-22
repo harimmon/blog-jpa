@@ -28,15 +28,28 @@ public class BoardResponse {
             this.next = current + 1;
             this.size = 3;
             this.totalCount = totalCount; // given
-            this.totalPage = makeTotalPage(totalCount, size);
+            this.totalPage = makeTotalPage(totalCount, size); // 2
             this.isFirst = current == 0;
             this.isLast = (totalPage - 1) == current;
-            System.out.println("isLast: " + isLast);
+            this.numbers = makeNumbers(current, totalPage);
         }
 
         private Integer makeTotalPage(int totalCount, int size) {
             int rest = totalCount % size > 0 ? 1 : 0; // 6 -> 0, 7 -> 1, 8 -> 2
             return totalCount / size + rest;
+        }
+
+        private List<Integer> makeNumbers(int current, int totalPage) { // 페이지 표시
+            List<Integer> numbers = new ArrayList<>();
+
+            int start = (current / 5) * 5;
+            int end = Math.min(start + 5, totalPage);
+
+            for (int i = start; i < end; i++) {
+                numbers.add(i);
+            }
+
+            return numbers;
         }
     }
 
