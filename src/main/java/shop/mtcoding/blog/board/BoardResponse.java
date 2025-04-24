@@ -21,8 +21,9 @@ public class BoardResponse {
         private boolean isFirst; // current == 0
         private boolean isLast; // totalCount, size = 3, totalPage == current
         private List<Integer> numbers;
+        private String keyword;
 
-        public DTO(List<Board> boards, Integer current, Integer totalCount) {
+        public DTO(List<Board> boards, Integer current, Integer totalCount, String keyword) {
             this.boards = boards;
             this.prev = current - 1;
             this.next = current + 1;
@@ -32,6 +33,7 @@ public class BoardResponse {
             this.isFirst = current == 0;
             this.isLast = (totalPage - 1) == current;
             this.numbers = makeNumbers(current, totalPage);
+            this.keyword = keyword; // 경우의 수 : keyword값이 있거나, null이거나
         }
 
         private Integer makeTotalPage(int totalCount, int size) {
